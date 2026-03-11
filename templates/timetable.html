@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fun Study Timer</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+/* ================= BACKGROUND ================= */
+body{
+    margin:0;
+    background:linear-gradient(135deg,#020617,#0f172a);
+    min-height:100vh;
+    font-family:"Segoe UI",sans-serif;
+    overflow:hidden;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ================= TIMER PANEL ================= */
+.timer-card{
+    width:480px;
+    background:#020617;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 0 60px rgba(56,189,248,0.9);
+    text-align:center;
+    z-index:5;
+}
+
+h2{color:#38bdf8;font-weight:900;}
+
+#time{
+    font-size:75px;
+    font-weight:900;
+    color:#22c55e;
+    text-shadow:0 0 30px rgba(34,197,94,0.9);
+    margin:20px 0;
+}
+
+/* ================= BUTTONS ================= */
+.mode-btn{
+    border:2px solid #38bdf8;
+    background:#1e293b;
+    color:#38bdf8;
+    border-radius:12px;
+    padding:8px 18px;
+    margin:5px;
+}
+
+.mode-btn.active{background:#38bdf8;color:black;}
+
+.control-btn{
+    width:120px;
+    padding:12px;
+    margin:10px;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    color:white;
+}
+
+.start{background:#22c55e;}
+.pause{background:#facc15;color:black;}
+.reset{background:#ef4444;}
+
+.control-btn:hover{transform:scale(1.1);}
+
+/* ================= FLOATING OBJECTS ================= */
+
+.floating-img,.floating-quote{
+    position:absolute;
+    pointer-events:none;
+    animation: spin 12s linear infinite, float 4s ease-in-out infinite;
+}
+
+.floating-img{width:90px;}
+
+.floating-quote{
+    padding:10px 15px;
+    background:linear-gradient(135deg,#38bdf8,#22c55e);
+    color:black;
+    border-radius:20px;
+    font-weight:700;
+    box-shadow:0 0 25px rgba(56,189,248,0.8);
+    font-size:14px;
+}
+
+/* ROTATE */
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+/* FLOAT */
+@keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-15px);}
+    100%{transform:translateY(0);}
+}
+
+/* BACK */
+.back-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    border:2px solid #38bdf8;
+    color:#38bdf8;
+}
+.back-btn:hover{background:#38bdf8;color:black;}
+
+</style>
+</head>
+
+<body>
+
+<a href="/dashboard" class="btn back-btn">⬅ Back</a>
+
+<div class="timer-card">
+
+<h2>⏱ Study Timer</h2>
+<div id="time">25:00</div>
+
+<div>
+ <button id="pomodoroBtn" class="mode-btn active">Pomodoro</button>
+ <button id="stopwatchBtn" class="mode-btn">Stopwatch</button>
+</div>
+
+<div>
+ <button class="control-btn start" onclick="startTimer()">Start</button>
+ <button class="control-btn pause" onclick="pauseTimer()">Pause</button>
+ <button class="control-btn reset" onclick="resetTimer()">Reset</button>
+</div>
+
+</div>
+
+<audio id="alarm">
+<source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
+</audio>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+
+/* ================= TIMER ================= */
+let time=1500,timer=null,mode="pomodoro";
+const timeEl=document.getElementById("time");
+
+function updateDisplay(){
+ let m=Math.floor(time/60);
+ let s=time%60;
+ timeEl.innerText=
+  String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+
+function startTimer(){
+ if(timer) return;
+ timer=setInterval(()=>{
+  if(mode==="pomodoro"){
+    if(time>0) time--;
+    else finish();
+  }else time++;
+  updateDisplay();
+ },1000);
+}
+
+function pauseTimer(){clearInterval(timer);timer=null;}
+function resetTimer(){
+ pauseTimer();
+ time=mode==="pomodoro"?1500:0;
+ updateDisplay();
+}
+
+pomodoroBtn.onclick=()=>{
+ mode="pomodoro";time=1500;
+ setActive(pomodoroBtn);
+ updateDisplay();
+}
+stopwatchBtn.onclick=()=>{
+ mode="stopwatch";time=0;
+ setActive(stopwatchBtn);
+ updateDisplay();
+}
+
+function setActive(btn){
+ document.querySelectorAll(".mode-btn")
+ .forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+}
+
+function finish(){
+ pauseTimer();
+ alarm.play();
+ confetti({particleCount:200,spread:100});
+ alert("🎉 You’re a Study Superstar!");
+}
+
+/* ================= ROAMING FUN OBJECTS ================= */
+
+const funImages=[
+ "https://cdn-icons-png.flaticon.com/512/616/616494.png",
+ "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+ "https://cdn-icons-png.flaticon.com/512/616/616430.png",
+ "https://cdn-icons-png.flaticon.com/512/616/616490.png",
+ "https://cdn-icons-png.flaticon.com/512/616/616449.png",
+ "https://cdn-icons-png.flaticon.com/512/616/616446.png"
+];
+
+const funQuotes=[
+ "🚀 Blast off into learning!",
+ "⭐ Be a shining star!",
+ "📚 Books are your superpower!",
+ "🧠 Train your brain!",
+ "🏆 Champion in progress!",
+ "💡 Smart ideas grow here!"
+];
+
+let imgIndex=0,quoteIndex=0;
+
+function spawnImage(){
+ let img=document.createElement("img");
+ img.src=funImages[imgIndex];
+ img.className="floating-img";
+ img.style.top=Math.random()*80+"vh";
+ img.style.left=Math.random()*80+"vw";
+ document.body.appendChild(img);
+ move(img);
+ imgIndex=(imgIndex+1)%funImages.length;
+ setTimeout(()=>img.remove(),10000);
+}
+
+function spawnQuote(){
+ let q=document.createElement("div");
+ q.className="floating-quote";
+ q.innerText=funQuotes[quoteIndex];
+ q.style.top=Math.random()*80+"vh";
+ q.style.left=Math.random()*80+"vw";
+ document.body.appendChild(q);
+ move(q);
+ quoteIndex=(quoteIndex+1)%funQuotes.length;
+ setTimeout(()=>q.remove(),10000);
+}
+
+function move(el){
+ setInterval(()=>{
+  el.style.transition="all 6s linear";
+  el.style.top=Math.random()*80+"vh";
+  el.style.left=Math.random()*80+"vw";
+ },6000);
+}
+
+/* Every 10 seconds */
+setInterval(spawnImage,10000);
+setInterval(spawnQuote,10000);
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>

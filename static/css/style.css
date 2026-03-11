@@ -1,0 +1,12 @@
+body{
+ background:#0f172a;
+ color:white;
+ font-family:Segoe UI;
+}
+.card{
+ background:#020617;
+ padding:25px;
+ border-radius:15px;
+ box-shadow:0 0 15px #38bdf8;
+}
+a{color:#38bdf8;text-decoration:none;}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Counselor</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+body{
+    background:linear-gradient(135deg,#020617,#0f172a);
+    color:white;
+    min-height:100vh;
+}
+
+/* ================= MAIN CARD ================= */
+
+.card{
+    background:#020617;
+    padding:35px;
+    border-radius:22px;
+    box-shadow:0 0 40px rgba(56,189,248,0.9);
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.header h2{
+    color:#38bdf8;
+    font-weight:700;
+}
+
+/* ================= CHAT AREA ================= */
+
+.chat-area{
+    background:#0f172a;
+    height:300px;
+    overflow-y:auto;
+    padding:20px;
+    border-radius:15px;
+    border:2px solid #38bdf8;
+    box-shadow:0 0 20px rgba(56,189,248,0.5);
+    margin-bottom:20px;
+}
+
+/* USER MESSAGE */
+
+.user-msg{
+    background:#1d4ed8;
+    color:white;
+    padding:10px 15px;
+    border-radius:12px;
+    margin-bottom:10px;
+    width:fit-content;
+    max-width:75%;
+}
+
+/* BOT MESSAGE */
+
+.bot-msg{
+    background:#064e3b;
+    color:#ecfdf5;
+    padding:10px 15px;
+    border-radius:12px;
+    margin-bottom:12px;
+    width:fit-content;
+    max-width:75%;
+    white-space:pre-line;
+}
+
+/* INPUT */
+
+.form-control{
+    background:#020617;
+    color:white;
+    border:2px solid #38bdf8;
+}
+
+.form-control::placeholder{
+    color:#cbd5f5;
+}
+
+/* BUTTON */
+
+.btn-primary{
+    background:#2563eb;
+    border:none;
+    font-size:18px;
+    padding:12px;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container mt-5">
+<div class="card">
+
+<!-- HEADER -->
+<div class="header">
+<h2>🤖 AI Counselor</h2>
+<a href="/dashboard" class="btn btn-outline-info">⬅ Back</a>
+</div>
+
+<!-- CHAT DISPLAY -->
+<div class="chat-area" id="chatBox">
+<div class="bot-msg">Hello! I am your AI Counselor. Ask me anything about careers, exams or studies.</div>
+</div>
+
+<!-- INPUT -->
+<div class="input-group">
+<input type="text" id="msg" class="form-control" placeholder="Type your message...">
+<button onclick="sendMsg()" class="btn btn-primary">Send</button>
+</div>
+
+</div>
+</div>
+
+<script>
+
+function sendMsg(){
+
+    let msg = document.getElementById("msg").value;
+
+    if(msg.trim() === ""){
+        return;
+    }
+
+    let chatBox = document.getElementById("chatBox");
+
+    chatBox.innerHTML += `<div class="user-msg">You: ${msg}</div>`;
+
+    fetch("/chat",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({msg:msg})
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        chatBox.innerHTML += `<div class="bot-msg">AI: ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    document.getElementById("msg").value="";
+}
+
+</script>
+
+</body>
+</html>

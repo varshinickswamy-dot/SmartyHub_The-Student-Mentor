@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Resume Builder</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* ================= GLOBAL ================= */
+body{
+    background:linear-gradient(135deg,#020617,#0f172a);
+    color:#ffffff;
+    min-height:100vh;
+}
+.card{
+    background:#020617;
+    padding:50px;
+    border-radius:24px;
+    box-shadow:0 0 45px rgba(56,189,248,0.9);
+}
+h2{
+    color:#38bdf8;
+    font-weight:800;
+}
+label{
+    color:#e0f2fe;
+    font-weight:600;
+}
+input, textarea{
+    background:#020617 !important;
+    color:#ffffff !important;
+    border:2px solid #38bdf8 !important;
+    padding:14px;
+    border-radius:12px;
+}
+#preview{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #38bdf8;
+    display:none;
+}
+.counter{
+    text-align:right;
+    font-size:12px;
+    color:#7dd3fc;
+}
+button{
+    background:#22c55e;
+    border:none;
+    padding:15px;
+    font-size:18px;
+    font-weight:700;
+    border-radius:12px;
+    color:white;
+}
+button:hover{
+    background:#16a34a;
+}
+.back-btn{
+    border:2px solid #38bdf8;
+    color:#38bdf8;
+}
+.back-btn:hover{
+    background:#38bdf8;
+    color:black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container mt-5 mb-5">
+<div class="card">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📄 Resume Builder</h2>
+    <a href="/dashboard" class="btn back-btn">⬅ Back</a>
+</div>
+
+<!-- 🔥 FIXED FORM -->
+<form method="POST" action="/resume" enctype="multipart/form-data">
+
+<label>Profile Photo (optional)</label>
+<img id="preview">
+<input type="file" name="photo" class="form-control mb-4"
+accept="image/*" onchange="previewImage(event)">
+
+<label>Full Name</label>
+<input name="name" class="form-control mb-3" required>
+
+<label>Email</label>
+<input name="email" type="email" class="form-control mb-3" required>
+
+<label>Phone</label>
+<input name="phone" class="form-control mb-3">
+
+<label>Address</label>
+<input name="address" class="form-control mb-4">
+
+<label>LinkedIn / GitHub</label>
+<input name="links" class="form-control mb-4">
+
+<label>Career Objective</label>
+<textarea name="summary" class="form-control" maxlength="300"></textarea>
+<div class="counter" id="sumCount">0 / 300</div>
+
+<label>Skills</label>
+<textarea name="skills" class="form-control" maxlength="250"></textarea>
+<div class="counter" id="skillsCount">0 / 250</div>
+
+<label>Education</label>
+<textarea name="education" class="form-control" maxlength="250"></textarea>
+<div class="counter" id="eduCount">0 / 250</div>
+
+<label>Experience</label>
+<textarea name="experience" class="form-control" maxlength="250"></textarea>
+<div class="counter" id="expCount">0 / 250</div>
+
+<label>Projects</label>
+<textarea name="projects" class="form-control" maxlength="250"></textarea>
+<div class="counter" id="projCount">0 / 250</div>
+
+<label>Certifications</label>
+<textarea name="certifications" class="form-control" maxlength="200"></textarea>
+<div class="counter" id="certCount">0 / 200</div>
+
+<label>Achievements</label>
+<textarea name="achievements" class="form-control" maxlength="200"></textarea>
+<div class="counter" id="achCount">0 / 200</div>
+
+<label>Languages</label>
+<input name="languages" class="form-control mb-4">
+
+<label>Hobbies</label>
+<input name="hobbies" class="form-control mb-4">
+
+<!-- 🔥 FIXED BUTTON -->
+<button type="submit" class="w-100">Generate Resume PDF</button>
+
+</form>
+
+</div>
+</div>
+
+<script>
+function previewImage(event){
+    const img=document.getElementById("preview");
+    img.src=URL.createObjectURL(event.target.files[0]);
+    img.style.display="block";
+}
+
+function countText(name,id){
+    const f=document.querySelector(`textarea[name='${name}']`);
+    const c=document.getElementById(id);
+    f.addEventListener("input",()=>{c.innerText=f.value.length+" / "+f.maxLength});
+}
+
+countText("summary","sumCount");
+countText("skills","skillsCount");
+countText("education","eduCount");
+countText("experience","expCount");
+countText("projects","projCount");
+countText("certifications","certCount");
+countText("achievements","achCount");
+</script>
+
+</body>
+</html>
